@@ -1,6 +1,6 @@
 COVERAGE_FILE ?= coverage.out
 
-TARGET ?= app # CHANGE THIS TO YOUR BINARY NAME
+TARGET ?= maze # CHANGE THIS TO YOUR BINARY NAME
 
 .PHONY: build
 build:

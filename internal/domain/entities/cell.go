@@ -1,4 +1,4 @@
-package domain
+package entities
 
 type Cell struct {
 	Point
@@ -10,5 +10,6 @@ type Walls struct {
 }
 
 type Point struct {
-	X, Y int
+	Row int 
+	Col int
 }

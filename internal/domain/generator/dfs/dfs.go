@@ -1,23 +1,26 @@
 package dfs
 
 import (
-	"math/rand/v2"
-
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
 )
 
-type DFSGenerator struct{}
+type Generator struct {
+	generator.BaseGenerator
+}
 
-func New() *DFSGenerator {
-	return &DFSGenerator{}
+func New(opts ...generator.GeneratorOption) *Generator {
+	return &Generator{
+		BaseGenerator: generator.NewBaseGenerator(opts...),
+	}
 }
 
 // Generate generates maze using DFS algorithm.
-func (g *DFSGenerator) Generate(m *maze.Maze) {
+func (g *Generator) Generate(m *maze.Maze) {
 	visited := make(map[*entities.Cell]bool, m.Size())
 
-	start := m.RandomCell()
+	start := m.Cell(g.Rand().IntN(m.Rows), g.Rand().IntN(m.Cols))
 	visited[start] = true
 
 	stack := []*entities.Cell{start}
@@ -26,13 +29,13 @@ func (g *DFSGenerator) Generate(m *maze.Maze) {
 		current := stack[len(stack)-1]
 
 		unvisited := m.UnvisitedNeighbors(current, visited)
-		
+
 		if len(unvisited) == 0 {
 			stack = stack[:len(stack)-1]
 			continue
 		}
 
-		neighbor := unvisited[rand.IntN(len(unvisited))]
+		neighbor := unvisited[g.Rand().IntN(len(unvisited))]
 		next := neighbor.Cell
 		neighbor.Direction.RemoveWall(current, next)
 

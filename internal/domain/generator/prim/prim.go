@@ -1,25 +1,28 @@
 package prim
 
 import (
-	"math/rand/v2"
-
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
-	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/lib/bag"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/pkg/bag"
 )
 
-type PrimGenerator struct{}
+type Generator struct {
+	generator.BaseGenerator
+}
 
-func New() *PrimGenerator {
-	return &PrimGenerator{}
+func New(opts ...generator.GeneratorOption) *Generator {
+	return &Generator{
+		BaseGenerator: generator.NewBaseGenerator(opts...),
+	}
 }
 
 // Generate generates maze using Prim algorithm.
-func (g *PrimGenerator) Generate(m *maze.Maze) {
+func (g *Generator) Generate(m *maze.Maze) {
 	visited := make(map[*entities.Cell]bool, m.Size())
 	frontier := bag.New[*entities.Cell](4)
 
-	start := m.RandomCell()
+	start := m.Cell(g.Rand().IntN(m.Rows), g.Rand().IntN(m.Cols))
 	visited[start] = true
 
 	for _, cell := range m.UnvisitedNeighbors(start, visited) {
@@ -30,7 +33,7 @@ func (g *PrimGenerator) Generate(m *maze.Maze) {
 		frontierCell := frontier.RandomItemAndDelete()
 
 		visitedCells := m.VisitedNeighbors(frontierCell, visited)
-		neighbor := visitedCells[rand.IntN(len(visitedCells))]
+		neighbor := visitedCells[g.Rand().IntN(len(visitedCells))]
 
 		neighbor.Direction.RemoveWall(frontierCell, neighbor.Cell)
 

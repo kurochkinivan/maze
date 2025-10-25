@@ -28,7 +28,7 @@ func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path,
 		current := s.chooseNode(end, costs, reachable)
 
 		if current == end {
-			return entities.BuildPath(previous, end).ReversePath(), true
+			return entities.BuildPath(previous, end), true
 		}
 
 		delete(reachable, current)

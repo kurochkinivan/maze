@@ -35,7 +35,7 @@ func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path,
 		current := heap.Pop(pq).(*weightedCell)
 
 		if current.cell == end {
-			return entities.BuildPath(previous, end).ReversePath(), true
+			return entities.BuildPath(previous, end), true
 		}
 
 		if visited[current.cell] {

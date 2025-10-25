@@ -13,9 +13,9 @@ func BuildPath(previous map[*Cell]*Cell, end *Cell) *Path {
 		current = previous[current]
 	}
 
-	return &Path{
-		Cells: path,
-	}
+	p := &Path{Cells: path}
+
+	return p.ReversePath()
 }
 
 func (p *Path) ReversePath() *Path {

@@ -1,1 +1,1 @@
-go run ../cmd/app --help
+go run ../cmd/maze --help

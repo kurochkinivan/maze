@@ -28,3 +28,6 @@ go.work.sum
 bin
 
 output/
+
+# temporary files
+tmp

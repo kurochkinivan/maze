@@ -1,1 +1,2 @@
-Invalid point format: 11, expected format: x,y
+failed to run app: failed to parse start point: invalid amount of coordinates, expected 2, got 1
+exit status 1

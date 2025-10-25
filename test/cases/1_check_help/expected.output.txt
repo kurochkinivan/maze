@@ -1,7 +1,13 @@
-Usage: maze-app [-hV] [COMMAND]
-Maze generator and solver CLI application.
-  -h, --help      Show this help message and exit.
-  -V, --version   Print version information and exit.
-Commands:
-  generate  Generate a maze with specified algorithm and dimensions.
-  solve     Solve a maze with specified algorithm and points.
+NAME:
+   maze - Generate and solve mazes
+
+USAGE:
+   maze [global options] [command [command options]]
+
+COMMANDS:
+   generate  Generate a maze using specified algorithm
+   solve     Solve a maze using specified algorithm
+   help, h   Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h  show help

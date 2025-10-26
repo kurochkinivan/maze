@@ -26,7 +26,7 @@ func (g *Generator) Generate(m *maze.Maze) {
 	visited := make(map[*entities.Cell]bool, m.Size())
 	frontier := bag.New[*entities.Cell](4)
 
-	start := m.Cell(g.Rand().IntN(m.Rows), g.Rand().IntN(m.Cols))
+	start := m.Cell(g.Rand().IntN(m.Rows()), g.Rand().IntN(m.Cols()))
 	visited[start] = true
 
 	for _, cell := range m.UnvisitedNeighbors(start, visited) {

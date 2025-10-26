@@ -23,8 +23,8 @@ func WriteMazeWithSolution(w io.Writer, m *maze.Maze, start, end *entities.Cell,
 }
 
 func renderGrid(m *maze.Maze) [][]byte {
-	height := m.Rows*2 + 1
-	width := m.Cols*2 + 1
+	height := m.Rows()*2 + 1
+	width := m.Cols()*2 + 1
 
 	grid := make([][]byte, height)
 	for row := range grid {

@@ -100,8 +100,8 @@ func (suite *GeneratorTestSuite) TestGenerate_LinearMaze() {
 func (suite *GeneratorTestSuite) countWalls(m *maze.Maze) int {
 	var cnt int
 
-	for row := 0; row < m.Rows; row++ {
-		for col := 0; col < m.Cols; col++ {
+	for row := 0; row < m.Rows(); row++ {
+		for col := 0; col < m.Cols(); col++ {
 			cell := m.Cell(row, col)
 
 			if cell.Walls.Top {
@@ -124,5 +124,5 @@ func (suite *GeneratorTestSuite) countWalls(m *maze.Maze) int {
 
 // initialWalls returns the initial amount of walls in the maze
 func (suite *GeneratorTestSuite) initialWalls(m *maze.Maze) int {
-	return m.Cols * m.Rows * 4
+	return m.Cols() * m.Rows() * 4
 }

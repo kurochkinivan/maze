@@ -6,8 +6,8 @@ import (
 
 type Maze struct {
 	cells [][]*entities.Cell
-	Rows  int
-	Cols  int
+	rows  int
+	cols  int
 }
 
 func New(width int, height int) *Maze {
@@ -24,8 +24,8 @@ func newEmpty(width int, height int) *Maze {
 	}
 
 	return &Maze{
-		Rows:  height,
-		Cols:  width,
+		rows:  height,
+		cols:  width,
 		cells: cells,
 	}
 }
@@ -99,9 +99,17 @@ func (m *Maze) Cell(row, col int) *entities.Cell {
 }
 
 func (m *Maze) Size() int {
-	return m.Rows * m.Cols
+	return m.Rows() * m.Cols()
 }
 
 func (m *Maze) IsValid(p entities.Point) bool {
-	return 0 <= p.Row() && p.Row() < m.Rows && 0 <= p.Col() && p.Col() < m.Cols
+	return 0 <= p.Row() && p.Row() < m.Rows() && 0 <= p.Col() && p.Col() < m.Cols()
+}
+
+func (m *Maze) Rows() int {
+	return m.rows
+}
+
+func (m *Maze) Cols() int {
+	return m.cols
 }

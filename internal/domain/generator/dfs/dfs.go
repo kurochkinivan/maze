@@ -24,7 +24,7 @@ func (g *Generator) Generate(m *maze.Maze) {
 	
 	visited := make(map[*entities.Cell]bool, m.Size())
 
-	start := m.Cell(g.Rand().IntN(m.Rows), g.Rand().IntN(m.Cols))
+	start := m.Cell(g.Rand().IntN(m.Rows()), g.Rand().IntN(m.Cols()))
 	visited[start] = true
 
 	stack := []*entities.Cell{start}

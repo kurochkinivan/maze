@@ -37,7 +37,7 @@ func (g *BaseGenerator) Rand() *rand.Rand {
 }
 
 func (g *BaseGenerator) RandomCell(m *maze.Maze) *entities.Cell {
-	row := g.Rand().IntN(m.Rows)
-	col := g.Rand().IntN(m.Cols)
+	row := g.Rand().IntN(m.Rows())
+	col := g.Rand().IntN(m.Cols())
 	return m.Cell(row, col)
 }

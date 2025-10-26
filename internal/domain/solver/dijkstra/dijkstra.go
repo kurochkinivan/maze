@@ -19,8 +19,8 @@ func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path,
 	previous := make(map[*entities.Cell]*entities.Cell)
 	costs := make(map[*entities.Cell]int, m.Size())
 
-	for row := range m.Rows {
-		for col := range m.Cols {
+	for row := range m.Rows() {
+		for col := range m.Cols() {
 			cell := m.Cell(row, col)
 			costs[cell] = math.MaxInt32
 		}

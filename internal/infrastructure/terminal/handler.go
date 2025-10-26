@@ -48,19 +48,12 @@ func (h *Handler) handleGenerate(c context.Context, cmd *cli.Command) error {
 func (h *Handler) handlerSolve(c context.Context, cmd *cli.Command) error {
 	algorithm := cmd.String("algorithm")
 	file := cmd.String("file")
-	start := cmd.String("start")
-	end := cmd.String("end")
+	start := cmd.IntSlice("start")
+	end := cmd.IntSlice("end")
 	output := cmd.String("output")
 
-	startPoint, err := parseToPoint(start)
-	if err != nil {
-		return fmt.Errorf("failed to parse start point: %w", err)
-	}
-
-	endPoint, err := parseToPoint(end)
-	if err != nil {
-		return fmt.Errorf("failed to parse end point: %w", err)
-	}
+	startPoint := entities.NewPoint(start[0], start[1])
+	endPoint := entities.NewPoint(end[0], end[1])
 
 	m, err := h.ReadMaze(file)
 	if err != nil {

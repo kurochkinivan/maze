@@ -1,11 +1,13 @@
 package maze
 
-import "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
+import (
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
+)
 
 type DirectionType int
 
 const (
-	DirUp DirectionType = iota
+	DirUp DirectionType = iota + 1
 	DirDown
 	DirLeft
 	DirRight

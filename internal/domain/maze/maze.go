@@ -28,10 +28,7 @@ func newEmpty(width int, height int) *Maze {
 	for row := range height {
 		cells[row] = make([]*entities.Cell, width)
 		for col := range width {
-			cells[row][col] = &entities.Cell{
-				Point: entities.Point{Row: row, Col: col},
-				Walls: entities.Walls{Top: true, Right: true, Bottom: true, Left: true},
-			}
+			cells[row][col] = entities.NewCell(row, col)
 		}
 	}
 

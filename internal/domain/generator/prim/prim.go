@@ -19,6 +19,10 @@ func New(opts ...generator.GeneratorOption) *Generator {
 
 // Generate generates maze using Prim algorithm.
 func (g *Generator) Generate(m *maze.Maze) {
+	if m.Size() <= 1 {
+		return
+	}
+
 	visited := make(map[*entities.Cell]bool, m.Size())
 	frontier := bag.New[*entities.Cell](4)
 

@@ -17,20 +17,26 @@ func (h *Handler) GenerateCommand() *cli.Command {
 				Value:    "dfs",
 				Required: false,
 				Usage:    "maze generation algorithm. Options: dfs, prim",
+				Validator: func(algorithm string) error {
+					if algorithm != "dfs" && algorithm != "prim" {
+						return fmt.Errorf("unknown algorithm %s", algorithm)
+					}
+					return nil
+				},
 			},
 			&cli.IntFlag{
-				Name:     "width",
-				Aliases:  []string{"w"},
-				Required: true,
-				Usage:    "width of the generated maze",
-				Validator: validatePositive,
+				Name:      "width",
+				Aliases:   []string{"w"},
+				Required:  true,
+				Usage:     "width of the generated maze",
+				Validator: validateGT0,
 			},
 			&cli.IntFlag{
-				Name:     "height",
-				Aliases:  []string{"h"},
-				Required: true,
-				Usage:    "height of the generated maze",
-				Validator: validatePositive,
+				Name:      "height",
+				Aliases:   []string{"h"},
+				Required:  true,
+				Usage:     "height of the generated maze",
+				Validator: validateGT0,
 			},
 			&cli.StringFlag{
 				Name:     "output",
@@ -54,6 +60,12 @@ func (h *Handler) SolveCommand() *cli.Command {
 				Value:    "astar",
 				Required: false,
 				Usage:    "path finding algorithm. Options: astar, dijkstra",
+				Validator: func(algorithm string) error {
+					if algorithm != "astar" && algorithm != "dijkstra" {
+						return fmt.Errorf("unknown algorithm %s", algorithm)
+					}
+					return nil
+				},
 			},
 			&cli.StringFlag{
 				Name:     "file",
@@ -97,9 +109,9 @@ func validateCoordinates(coords []int) error {
 	return nil
 }
 
-func validatePositive(number int) error {
-	if number < 0 {
-		return fmt.Errorf("should be positive")
+func validateGT0(number int) error {
+	if number <= 0 {
+		return fmt.Errorf("should be greater than 0")
 	}
 	return nil
 }

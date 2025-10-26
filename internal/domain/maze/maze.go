@@ -10,17 +10,8 @@ type Maze struct {
 	Cols  int
 }
 
-type Generator interface {
-	Generate(m *Maze)
-}
-
 func New(width int, height int) *Maze {
 	return newEmpty(width, height)
-}
-
-func (m *Maze) Generate(generator Generator) *Maze {
-	generator.Generate(m)
-	return m
 }
 
 func newEmpty(width int, height int) *Maze {

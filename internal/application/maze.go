@@ -41,7 +41,10 @@ func (s *MazeService) GenerateMaze(algorithm string, width, height int) (*maze.M
 		return nil, fmt.Errorf("unknown algorithm %q", algorithm)
 	}
 
-	return maze.New(width, height).Generate(gen), nil
+	m := maze.New(width, height)
+	gen.Generate(m)
+
+	return m, nil
 }
 
 func (s *MazeService) SolveMaze(algorithm string, m *maze.Maze, start, end *entities.Cell) (*entities.Path, error) {

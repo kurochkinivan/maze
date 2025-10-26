@@ -75,7 +75,7 @@ func (s *Solver) chooseNode(
 }
 
 func (s *Solver) manhattanDistance(c1, c2 *entities.Cell) int {
-	return abs(c1.Row-c2.Row) + abs(c1.Col-c2.Col)
+	return abs(c1.Row()-c2.Row()) + abs(c1.Col()-c2.Col())
 }
 
 func abs(a int) int {

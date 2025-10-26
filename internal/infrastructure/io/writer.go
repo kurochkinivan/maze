@@ -64,8 +64,8 @@ func addPath(grid [][]byte, start, end *entities.Cell, path *entities.Path) [][]
 		prev := path.Cells[i-1]
 		curr := path.Cells[i]
 
-		prevRow, prevCol := prev.Row*2+1, prev.Col*2+1
-		curRow, curCol := curr.Row*2+1, curr.Col*2+1
+		prevRow, prevCol := prev.Row()*2+1, prev.Col()*2+1
+		curRow, curCol := curr.Row()*2+1, curr.Col()*2+1
 		midRow := (prevRow + curRow) / 2
 		midCol := (prevCol + curCol) / 2
 
@@ -74,8 +74,8 @@ func addPath(grid [][]byte, start, end *entities.Cell, path *entities.Path) [][]
 		grid[curRow][curCol] = '.'
 	}
 
-	startRow, startCol := start.Row*2+1, start.Col*2+1
-	endRow, endCol := end.Row*2+1, end.Col*2+1
+	startRow, startCol := start.Row()*2+1, start.Col()*2+1
+	endRow, endCol := end.Row()*2+1, end.Col()*2+1
 
 	grid[startRow][startCol] = 'O'
 	grid[endRow][endCol] = 'X'

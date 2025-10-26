@@ -67,8 +67,8 @@ func (h *Handler) handlerSolve(c context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("failed to read maze: %w", err)
 	}
 
-	startCell := m.Cell(startPoint.Row, startPoint.Col)
-	endCell := m.Cell(endPoint.Row, endPoint.Col)
+	startCell := m.Cell(startPoint.Row(), startPoint.Col())
+	endCell := m.Cell(endPoint.Row(), endPoint.Col())
 
 	path, err := h.mazeService.SolveMaze(algorithm, m, startCell, endCell)
 	if err != nil {

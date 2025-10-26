@@ -8,26 +8,23 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 )
 
-func parseToPoint(coordinates string) (*entities.Point, error) {
+func parseToPoint(coordinates string) (entities.Point, error) {
 	coordinates = strings.ReplaceAll(coordinates, " ", "")
 	coords := strings.Split(coordinates, ",")
 
 	if len(coords) != 2 {
-		return nil, fmt.Errorf("invalid amount of coordinates, expected 2, got %d", len(coords))
+		return entities.Point{}, fmt.Errorf("invalid amount of coordinates, expected 2, got %d", len(coords))
 	}
 
 	x, err := strconv.Atoi(coords[0])
 	if err != nil {
-		return nil, fmt.Errorf("failed to parce first coordinate %q: %w", coords[0], err)
+		return entities.Point{}, fmt.Errorf("failed to parce first coordinate %q: %w", coords[0], err)
 	}
 
 	y, err := strconv.Atoi(coords[1])
 	if err != nil {
-		return nil, fmt.Errorf("failed to parce second coordinate %q: %w", coords[1], err)
+		return entities.Point{}, fmt.Errorf("failed to parce second coordinate %q: %w", coords[1], err)
 	}
 
-	return &entities.Point{
-		Row: y,
-		Col: x,
-	}, nil
+	return entities.NewPoint(y, x), nil
 }

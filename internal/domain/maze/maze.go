@@ -48,16 +48,13 @@ func (m *Maze) ReachableNeighbors(cell *entities.Cell) []*entities.Cell {
 			continue
 		}
 
-		neighbor := entities.Point{
-			Row: cell.Row + dir.DRow,
-			Col: cell.Col + dir.DCol,
-		}
+		neighbor := entities.NewPoint(cell.Row()+dir.DRow, cell.Col()+dir.DCol)
 
 		if !m.IsValid(neighbor) {
 			continue
 		}
 
-		neighbors = append(neighbors, m.Cell(neighbor.Row, neighbor.Col))
+		neighbors = append(neighbors, m.Cell(neighbor.Row(), neighbor.Col()))
 	}
 
 	return neighbors
@@ -73,18 +70,6 @@ func (m *Maze) VisitedNeighbors(cell *entities.Cell, visited map[*entities.Cell]
 	return m.filteredNeighbors(cell, func(c *entities.Cell) bool {
 		return visited[c]
 	})
-}
-
-func (m *Maze) Cell(row, col int) *entities.Cell {
-	return m.cells[row][col]
-}
-
-func (m *Maze) Size() int {
-	return m.Rows * m.Cols
-}
-
-func (m *Maze) IsValid(p entities.Point) bool {
-	return 0 <= p.Row && p.Row < m.Rows && 0 <= p.Col && p.Col < m.Cols
 }
 
 func (m *Maze) filteredNeighbors(cell *entities.Cell, filter func(c *entities.Cell) bool) []*Neighbor {
@@ -104,16 +89,28 @@ func (m *Maze) neighbors(cell *entities.Cell) []*Neighbor {
 	neighbors := make([]*Neighbor, 0, 4)
 
 	for _, dir := range allDirections {
-		neighbor := entities.Point{Row: cell.Row + dir.DRow, Col: cell.Col + dir.DCol}
+		neighbor := entities.NewPoint(cell.Row()+dir.DRow, cell.Col()+dir.DCol)
 		if !m.IsValid(neighbor) {
 			continue
 		}
 
 		neighbors = append(neighbors, &Neighbor{
-			Cell:      m.Cell(neighbor.Row, neighbor.Col),
+			Cell:      m.Cell(neighbor.Row(), neighbor.Col()),
 			Direction: dir,
 		})
 	}
 
 	return neighbors
+}
+
+func (m *Maze) Cell(row, col int) *entities.Cell {
+	return m.cells[row][col]
+}
+
+func (m *Maze) Size() int {
+	return m.Rows * m.Cols
+}
+
+func (m *Maze) IsValid(p entities.Point) bool {
+	return 0 <= p.Row() && p.Row() < m.Rows && 0 <= p.Col() && p.Col() < m.Cols
 }

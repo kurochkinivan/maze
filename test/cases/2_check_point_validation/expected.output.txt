@@ -1,2 +1,4 @@
-failed to run app: failed to parse start point: invalid amount of coordinates, expected 2, got 1
+Incorrect Usage: invalid value "11" for flag -start: invalid amount of coordinates, expected 2, got 1
+
+invalid value "11" for flag -start: invalid amount of coordinates, expected 2, got 1
 exit status 1

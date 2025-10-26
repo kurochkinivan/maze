@@ -1,0 +1,1 @@
+go run ../cmd/maze generate --width=-1 --height=-1

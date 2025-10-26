@@ -1,8 +1,9 @@
 package entities
 
 import (
-	"slices"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBuildPath(t *testing.T) {
@@ -53,9 +54,7 @@ func TestBuildPath(t *testing.T) {
 
 	for _, tt := range tests {
 		path := BuildPath(tt.previous, tt.end)
-		if !slices.Equal(path.Cells, tt.want) {
-			t.Errorf("want %v got %v", tt.want, path.Cells)
-		}
+		assert.Equal(t, path.Cells, tt.want)
 	}
 }
 
@@ -90,8 +89,6 @@ func TestReversePath(t *testing.T) {
 		p := &Path{Cells: tt.input}
 		p.ReversePath()
 
-		if !slices.Equal(p.Cells, tt.want) {
-			t.Errorf("got = %v, want = %v", p.Cells, tt.want)
-		}
+		assert.Equal(t, p.Cells, tt.want)
 	}
 }

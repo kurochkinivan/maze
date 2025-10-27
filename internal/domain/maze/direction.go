@@ -24,7 +24,7 @@ type Neighbor struct {
 	Direction Direction
 }
 
-// HasWall returns true if there's a wall in this direction
+// HasWall returns true if there's a wall in this direction.
 func (d Direction) HasWall(cell *entities.Cell) bool {
 	switch d.Type {
 	case DirUp:
@@ -40,7 +40,7 @@ func (d Direction) HasWall(cell *entities.Cell) bool {
 	}
 }
 
-// RemoveWall removes walls between two cells in this direction
+// RemoveWall removes walls between two cells in this direction.
 func (d Direction) RemoveWall(from, to *entities.Cell) {
 	switch d.Type {
 	case DirUp:

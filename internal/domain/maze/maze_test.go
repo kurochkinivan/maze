@@ -74,7 +74,7 @@ func TestNeighbours(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			neighbors := maze.neighbors(tt.cell)
-			require.Equal(t, len(tt.want), len(neighbors))
+			require.Len(t, neighbors, len(tt.want))
 
 			for _, neighbor := range neighbors {
 				assert.Contains(t, tt.want, neighbor.Cell)
@@ -98,34 +98,34 @@ func TestIsValid(t *testing.T) {
 	maze := New(width, height)
 
 	tests := []struct {
-		name string
-		point    entities.Point
-		want bool
+		name  string
+		point entities.Point
+		want  bool
 	}{
 		{
-			name: "regular point",
+			name:  "regular point",
 			point: entities.NewPoint(height/2, width/2),
-			want: true,
+			want:  true,
 		},
 		{
-			name: "starting point",
+			name:  "starting point",
 			point: entities.NewPoint(0, 0),
-			want: true,
+			want:  true,
 		},
 		{
-			name: "ending point",
+			name:  "ending point",
 			point: entities.NewPoint(height-1, width-1),
-			want: true,
+			want:  true,
 		},
 		{
-			name: "out of bounds +1",
+			name:  "out of bounds +1",
 			point: entities.NewPoint(height, width),
-			want: false,
+			want:  false,
 		},
 		{
-			name: "out of bounds -1",
+			name:  "out of bounds -1",
 			point: entities.NewPoint(-1, -1),
-			want: false,
+			want:  false,
 		},
 	}
 

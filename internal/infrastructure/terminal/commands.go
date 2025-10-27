@@ -1,6 +1,7 @@
 package terminal
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/urfave/cli/v3"
@@ -103,7 +104,7 @@ func validateCoordinates(coords []int) error {
 		return fmt.Errorf("invalid amount of coordinates, expected 2, got %d", len(coords))
 	}
 	if coords[0] < 0 || coords[1] < 0 {
-		return fmt.Errorf("coordinates should be positive")
+		return errors.New("coordinates should be positive")
 	}
 
 	return nil
@@ -111,7 +112,7 @@ func validateCoordinates(coords []int) error {
 
 func validateGT0(number int) error {
 	if number <= 0 {
-		return fmt.Errorf("should be greater than 0")
+		return errors.New("should be greater than 0")
 	}
 	return nil
 }

@@ -55,7 +55,7 @@ func TestBuildPath(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			path := BuildPath(tt.previous, tt.end)
-			assert.Equal(t, path.Cells, tt.want)
+			assert.Equal(t, tt.want, path.Cells)
 		})
 	}
 }
@@ -92,7 +92,7 @@ func TestReversePath(t *testing.T) {
 			p := &Path{Cells: tt.input}
 			p.ReversePath()
 
-			assert.Equal(t, p.Cells, tt.want)
+			assert.Equal(t, tt.want, p.Cells)
 		})
 	}
 }

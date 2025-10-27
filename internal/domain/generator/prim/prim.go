@@ -11,7 +11,7 @@ type Generator struct {
 	generator.BaseGenerator
 }
 
-func New(opts ...generator.GeneratorOption) *Generator {
+func New(opts ...generator.Option) *Generator {
 	return &Generator{
 		BaseGenerator: generator.NewBaseGenerator(opts...),
 	}
@@ -24,7 +24,7 @@ func (g *Generator) Generate(m *maze.Maze) {
 	}
 
 	visited := make(map[*entities.Cell]bool, m.Size())
-	frontier := bag.New[*entities.Cell](4)
+	frontier := bag.New[*entities.Cell](0)
 
 	start := m.Cell(g.Rand().IntN(m.Rows()), g.Rand().IntN(m.Cols()))
 	visited[start] = true

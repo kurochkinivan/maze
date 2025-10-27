@@ -11,7 +11,7 @@ type BaseGenerator struct {
 	rnd *rand.Rand
 }
 
-func NewBaseGenerator(opts ...GeneratorOption) BaseGenerator {
+func NewBaseGenerator(opts ...Option) BaseGenerator {
 	g := BaseGenerator{
 		rnd: rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64())),
 	}
@@ -23,9 +23,9 @@ func NewBaseGenerator(opts ...GeneratorOption) BaseGenerator {
 	return g
 }
 
-type GeneratorOption func(*BaseGenerator)
+type Option func(*BaseGenerator)
 
-func WithSeed(seed1, seed2 uint64) GeneratorOption {
+func WithSeed(seed1, seed2 uint64) Option {
 	return func(g *BaseGenerator) {
 		source := rand.NewPCG(seed1, seed2)
 		g.rnd = rand.New(source)

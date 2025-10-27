@@ -56,7 +56,6 @@ func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path,
 					cost: newCost,
 				})
 			}
-
 		}
 	}
 

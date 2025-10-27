@@ -3,8 +3,6 @@ package test
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator/dfs"
@@ -69,8 +67,8 @@ func (suite *IntegrationTestSuite) TestNoIsolatedAreas() {
 			end := m.Cell(row, col)
 
 			path, ok := suite.Solver.Solve(m, start, end)
-			require.True(suite.T(), ok, "there must be no isolated areas")
-			assert.NotNil(suite.T(), path, "there must be a path")
+			suite.Require().True(ok, "there must be no isolated areas")
+			suite.NotNil(path, "there must be a path")
 		}
 	}
 }
@@ -86,8 +84,8 @@ func (suite *IntegrationTestSuite) TestSolutionIsWalkable() {
 	end := m.Cell(height-1, width-1)
 
 	path, ok := suite.Solver.Solve(m, start, end)
-	require.True(suite.T(), ok, "there must be no isolated areas")
-	assert.NotNil(suite.T(), path, "there must be a path")
+	suite.Require().True(ok, "there must be no isolated areas")
+	suite.NotNil(path, "there must be a path")
 
 	for i := 1; i < len(path.Cells); i++ {
 		prev, cur := path.Cells[i-1], path.Cells[i]
@@ -97,20 +95,20 @@ func (suite *IntegrationTestSuite) TestSolutionIsWalkable() {
 
 		switch {
 		case rowDiff == 0 && colDiff == -1:
-			require.False(suite.T(), prev.Walls.Left, "unexpected Left wall on the path")
-			require.False(suite.T(), cur.Walls.Right, "unexpected Right wall on the path")
+			suite.Require().False(prev.Walls.Left, "unexpected Left wall on the path")
+			suite.Require().False(cur.Walls.Right, "unexpected Right wall on the path")
 
 		case rowDiff == 0 && colDiff == 1:
-			require.False(suite.T(), prev.Walls.Right, "unexpected Right wall on the path")
-			require.False(suite.T(), cur.Walls.Left, "unexpected Left wall on the path")
+			suite.Require().False(prev.Walls.Right, "unexpected Right wall on the path")
+			suite.Require().False(cur.Walls.Left, "unexpected Left wall on the path")
 
 		case rowDiff == 1 && colDiff == 0:
-			require.False(suite.T(), prev.Walls.Bottom, "unexpected Bottom wall on the path")
-			require.False(suite.T(), cur.Walls.Top, "unexpected Top wall on the path")
+			suite.Require().False(prev.Walls.Bottom, "unexpected Bottom wall on the path")
+			suite.Require().False(cur.Walls.Top, "unexpected Top wall on the path")
 
 		case rowDiff == -1 && colDiff == 0:
-			require.False(suite.T(), prev.Walls.Top, "unexpected Top wall on the path")
-			require.False(suite.T(), cur.Walls.Bottom, "unexpected Bottom wall on the path")
+			suite.Require().False(prev.Walls.Top, "unexpected Top wall on the path")
+			suite.Require().False(cur.Walls.Bottom, "unexpected Bottom wall on the path")
 
 		default:
 			suite.T().Fatalf("invalid movement detected between %v and %v", prev, cur)

@@ -5,6 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/application/mocks"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
@@ -21,7 +22,7 @@ func TestGenerateMaze_HappyPath(t *testing.T) {
 	mazeUseCase.RegisterGenerator(algorithm, mockGenerator)
 
 	m, err := mazeUseCase.GenerateMaze(algorithm, 5, 5)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.NotNil(t, m)
 
 	mockGenerator.AssertExpectations(t)
@@ -31,7 +32,7 @@ func TestGenerateMaze_UnknownAlgorithm(t *testing.T) {
 	mazeUseCase := NewMazeService()
 
 	m, err := mazeUseCase.GenerateMaze("some_algorithm", 10, 10)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, m)
 }
 
@@ -51,7 +52,7 @@ func TestSolveMaze_HappyPath(t *testing.T) {
 	mazeUseCase.RegisterSolver(algorithm, mockSolver)
 
 	path, err := mazeUseCase.SolveMaze(algorithm, m, start, end)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 	assert.Equal(t, expectPath, path)
 
 	mockSolver.AssertExpectations(t)
@@ -71,7 +72,7 @@ func TestSolveMaze_NoSolution(t *testing.T) {
 	mazeUseCase.RegisterSolver(algorithm, mockSolver)
 
 	path, err := mazeUseCase.SolveMaze(algorithm, m, start, end)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, path)
 	assert.Contains(t, err.Error(), "no solution")
 
@@ -86,6 +87,6 @@ func TestSolveMaze_UnknownAlgorithm(t *testing.T) {
 	maze.DirectionRight.RemoveWall(start, end)
 
 	path, err := mazeUseCase.SolveMaze("some_algorithm", m, start, end)
-	assert.Error(t, err)
+	require.Error(t, err)
 	assert.Nil(t, path)
 }

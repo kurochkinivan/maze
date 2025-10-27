@@ -2,6 +2,7 @@ package io
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 
@@ -11,7 +12,8 @@ import (
 // ReadMaze scans maze from io.Reader.
 func ReadMaze(r io.Reader) (*maze.Maze, error) {
 	sc := bufio.NewScanner(r)
-	lines := make([]string, 0, 4)
+
+	var lines []string
 	for sc.Scan() {
 		lines = append(lines, sc.Text())
 	}
@@ -25,11 +27,11 @@ func ReadMaze(r io.Reader) (*maze.Maze, error) {
 
 func parseMaze(lines []string) (*maze.Maze, error) {
 	if len(lines) < 3 || len(lines[0]) < 3 {
-		return nil, fmt.Errorf("invalid maze: must contain at least 3 lines and cols")
+		return nil, errors.New("invalid maze: must contain at least 3 lines and cols")
 	}
 
 	if len(lines)%2 != 1 || len(lines[0])%2 != 1 {
-		return nil, fmt.Errorf("invalid maze: number of lines and cols must be odd")
+		return nil, errors.New("invalid maze: number of lines and cols must be odd")
 	}
 
 	height := (len(lines) - 1) / 2

@@ -4,6 +4,10 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 )
 
+const (
+	numberOfWalls = 4
+)
+
 type Maze struct {
 	cells [][]*entities.Cell
 	rows  int
@@ -30,9 +34,9 @@ func newEmpty(width int, height int) *Maze {
 	}
 }
 
-// ReachableNeighbors returns neighbors that has no walls with the cell
+// ReachableNeighbors returns neighbors that has no walls with the cell.
 func (m *Maze) ReachableNeighbors(cell *entities.Cell) []*entities.Cell {
-	neighbors := make([]*entities.Cell, 0, 4)
+	neighbors := make([]*entities.Cell, 0, numberOfWalls)
 
 	for _, dir := range allDirections {
 		if dir.HasWall(cell) {
@@ -77,7 +81,7 @@ func (m *Maze) filteredNeighbors(cell *entities.Cell, filter func(c *entities.Ce
 }
 
 func (m *Maze) neighbors(cell *entities.Cell) []*Neighbor {
-	neighbors := make([]*Neighbor, 0, 4)
+	neighbors := make([]*Neighbor, 0, numberOfWalls)
 
 	for _, dir := range allDirections {
 		neighbor := entities.NewPoint(cell.Row()+dir.DRow, cell.Col()+dir.DCol)

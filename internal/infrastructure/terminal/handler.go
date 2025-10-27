@@ -27,7 +27,7 @@ func New(mazeService MazeService) *Handler {
 	}
 }
 
-func (h *Handler) handleGenerate(c context.Context, cmd *cli.Command) error {
+func (h *Handler) handleGenerate(_ context.Context, cmd *cli.Command) error {
 	algorithm := cmd.String("algorithm")
 	width := cmd.Int("width")
 	height := cmd.Int("height")
@@ -38,14 +38,14 @@ func (h *Handler) handleGenerate(c context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("failed to generate maze: %w", err)
 	}
 
-	if err := h.WriteMaze(output, m); err != nil {
+	if err = h.WriteMaze(output, m); err != nil {
 		return fmt.Errorf("failed to write maze: %w", err)
 	}
 
 	return nil
 }
 
-func (h *Handler) handlerSolve(c context.Context, cmd *cli.Command) error {
+func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 	algorithm := cmd.String("algorithm")
 	file := cmd.String("file")
 	start := cmd.IntSlice("start")
@@ -68,7 +68,7 @@ func (h *Handler) handlerSolve(c context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("failed to solve maze: %w", err)
 	}
 
-	if err := h.WriteMazeWithSolution(output, m, startCell, endCell, path); err != nil {
+	if err = h.WriteMazeWithSolution(output, m, startCell, endCell, path); err != nil {
 		return fmt.Errorf("failed to write solution: %w", err)
 	}
 

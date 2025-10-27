@@ -1,4 +1,4 @@
-package test
+package solver_test
 
 import (
 	"testing"
@@ -123,7 +123,7 @@ func (suite *SolverTestSuite) TestSolve_OptimalPath() {
 
 	suite.True(ok, "should find path")
 	suite.NotNil(path)
-	suite.Equal(3, len(path.Cells), "optimal path should have length 3")
+	suite.Len(path.Cells, 3, "optimal path should have length 3")
 	suite.Equal(cellA, path.Cells[0], "path should start at A")
 	suite.Equal(cellE, path.Cells[len(path.Cells)-1], "path should end at E")
 }

@@ -1,6 +1,7 @@
 package application
 
 import (
+	"errors"
 	"fmt"
 
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
@@ -55,7 +56,7 @@ func (s *MazeService) SolveMaze(algorithm string, m *maze.Maze, start, end *enti
 
 	path, ok := solver.Solve(m, start, end)
 	if !ok {
-		return nil, fmt.Errorf("no solution")
+		return nil, errors.New("no solution")
 	}
 
 	return path, nil

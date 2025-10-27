@@ -90,8 +90,6 @@ func (h *Handler) ReadMaze(filename string) (*maze.Maze, error) {
 		defer f.Close()
 
 		reader = f
-	} else {
-		fmt.Fprintf(os.Stdout, "Enter maze (paste maze text, then press Ctrl+D on Unix or Ctrl+Z on Windows):\n")
 	}
 
 	return mazeio.ReadMaze(reader)

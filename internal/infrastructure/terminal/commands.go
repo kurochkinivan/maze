@@ -7,6 +7,7 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
+// GenerateCommand returns a configured *cli.Command for the "generate" subcommand.
 func (h *Handler) GenerateCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "generate",
@@ -50,6 +51,7 @@ func (h *Handler) GenerateCommand() *cli.Command {
 	}
 }
 
+// SolveCommand returns a configured *cli.Command for the "solve" subcommand.
 func (h *Handler) SolveCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "solve",

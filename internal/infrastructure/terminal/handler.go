@@ -12,21 +12,26 @@ import (
 	mazeio "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/io"
 )
 
+// Handler is a CLI handler that uses a MazeService to generate and solve mazes.
 type Handler struct {
 	mazeService MazeService
 }
 
+// MazeService defines the methods the Handler depends on to generate
+// and solve mazes.
 type MazeService interface {
 	GenerateMaze(algorithm string, width, height int) (*maze.Maze, error)
 	SolveMaze(algorithm string, m *maze.Maze, start, end *entities.Cell) (*entities.Path, error)
 }
 
+// New creates a new Handler with the provided MazeService.
 func New(mazeService MazeService) *Handler {
 	return &Handler{
 		mazeService: mazeService,
 	}
 }
 
+// handleGenerate handles the CLI command to generate a maze.
 func (h *Handler) handleGenerate(_ context.Context, cmd *cli.Command) error {
 	algorithm := cmd.String("algorithm")
 	width := cmd.Int("width")
@@ -45,6 +50,7 @@ func (h *Handler) handleGenerate(_ context.Context, cmd *cli.Command) error {
 	return nil
 }
 
+// handlerSolve handles the CLI command to solve a maze.
 func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 	algorithm := cmd.String("algorithm")
 	file := cmd.String("file")
@@ -75,10 +81,15 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 	return nil
 }
 
+// ReadMaze reads a maze from the provided filename or from stdin if filename is empty.
+// It checks the file existence, opens it and delegates parsing to the mazeio package.
 func (h *Handler) ReadMaze(filename string) (*maze.Maze, error) {
-	var reader io.Reader = os.Stdin
+	var reader io.Reader
 
-	if filename != "" {
+	switch filename {
+	case "":
+		reader = os.Stdin
+	default:
 		if _, err := os.Stat(filename); err != nil {
 			return nil, fmt.Errorf("failed to locate file %q: %w", filename, err)
 		}
@@ -95,10 +106,15 @@ func (h *Handler) ReadMaze(filename string) (*maze.Maze, error) {
 	return mazeio.ReadMaze(reader)
 }
 
+// WriteMaze writes the provided maze to the given filename or to stdout if filename is empty.
+// It creates/truncates the file when a filename is provided and delegates formatting to mazeio.
 func (h *Handler) WriteMaze(filename string, m *maze.Maze) error {
-	var writer io.Writer = os.Stdout
+	var writer io.Writer
 
-	if filename != "" {
+	switch filename {
+	case "":
+		writer = os.Stdout
+	default:
 		f, err := os.Create(filename)
 		if err != nil {
 			return fmt.Errorf("failed to create file: %w", err)
@@ -111,15 +127,20 @@ func (h *Handler) WriteMaze(filename string, m *maze.Maze) error {
 	return mazeio.WriteMaze(writer, m)
 }
 
+// WriteMazeWithSolution writes the maze with the solution path to the given filename
+// or stdout if filename is empty. It delegates the actual rendering to mazeio.
 func (h *Handler) WriteMazeWithSolution(
 	filename string,
 	m *maze.Maze,
 	start, end *entities.Cell,
 	path *entities.Path,
 ) error {
-	var writer io.Writer = os.Stdout
+	var writer io.Writer
 
-	if filename != "" {
+	switch filename {
+	case "":
+		writer = os.Stdout
+	default:
 		f, err := os.Create(filename)
 		if err != nil {
 			return fmt.Errorf("failed to create file: %w", err)

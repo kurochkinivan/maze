@@ -8,12 +8,16 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
 )
 
+// Solver finds the shortest path in a maze using the Dijkstra algorithm.
 type Solver struct{}
 
+// New creates a new Dijkstra solver.
 func New() *Solver {
 	return &Solver{}
 }
 
+// Solve finds a path from start to end cells in the maze.
+// Returns the path and true if a path exists, otherwise nil and false.
 func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path, bool) {
 	visited := make(map[*entities.Cell]bool)
 	previous := make(map[*entities.Cell]*entities.Cell)

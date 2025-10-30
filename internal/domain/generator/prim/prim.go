@@ -7,17 +7,19 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/pkg/bag"
 )
 
+// Generator creates mazes using the Prim algorithm.
 type Generator struct {
 	generator.BaseGenerator
 }
 
+// New creates a new Prim-based maze generator with optional settings.
 func New(opts ...generator.Option) *Generator {
 	return &Generator{
 		BaseGenerator: generator.NewBaseGenerator(opts...),
 	}
 }
 
-// Generate generates maze using Prim algorithm.
+// Generate builds a maze using Prim's algorithm.
 func (g *Generator) Generate(m *maze.Maze) {
 	if m.Size() <= 1 {
 		return
@@ -26,7 +28,7 @@ func (g *Generator) Generate(m *maze.Maze) {
 	visited := make(map[*entities.Cell]bool, m.Size())
 	frontier := bag.New[*entities.Cell](0)
 
-	start := m.Cell(g.Rand().IntN(m.Rows()), g.Rand().IntN(m.Cols()))
+	start := m.Cell(g.IntN(m.Rows()), g.IntN(m.Cols()))
 	visited[start] = true
 
 	for _, cell := range m.UnvisitedNeighbors(start, visited) {
@@ -37,7 +39,7 @@ func (g *Generator) Generate(m *maze.Maze) {
 		frontierCell := frontier.RandomItemAndDelete()
 
 		visitedCells := m.VisitedNeighbors(frontierCell, visited)
-		neighbor := visitedCells[g.Rand().IntN(len(visitedCells))]
+		neighbor := visitedCells[g.IntN(len(visitedCells))]
 
 		neighbor.Direction.RemoveWall(frontierCell, neighbor.Cell)
 

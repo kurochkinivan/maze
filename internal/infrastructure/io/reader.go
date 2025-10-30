@@ -25,6 +25,7 @@ func ReadMaze(r io.Reader) (*maze.Maze, error) {
 	return parseMaze(lines)
 }
 
+// parseMaze parses maze from given lines according to the certain rules.
 func parseMaze(lines []string) (*maze.Maze, error) {
 	if len(lines) < 3 || len(lines[0]) < 3 {
 		return nil, errors.New("invalid maze: must contain at least 3 lines and cols")

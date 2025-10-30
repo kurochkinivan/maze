@@ -4,6 +4,7 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 )
 
+// DirectionType represents the possible movement directions in the maze.
 type DirectionType int
 
 const (
@@ -13,12 +14,14 @@ const (
 	DirRight
 )
 
+// Direction defines a movement vector and its type.
 type Direction struct {
 	Type DirectionType
 	DRow int
 	DCol int
 }
 
+// Neighbor represents an adjacent cell and the direction to reach it.
 type Neighbor struct {
 	Cell      *entities.Cell
 	Direction Direction
@@ -64,5 +67,6 @@ var (
 	DirectionLeft  = Direction{Type: DirLeft, DRow: 0, DCol: -1}
 	DirectionRight = Direction{Type: DirRight, DRow: 0, DCol: 1}
 
+	// allDirections contains all possible movement directions.
 	allDirections = []Direction{DirectionUp, DirectionDown, DirectionLeft, DirectionRight}
 )

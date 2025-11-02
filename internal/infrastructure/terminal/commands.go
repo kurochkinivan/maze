@@ -28,14 +28,14 @@ func (h *Handler) GenerateCommand() *cli.Command {
 			},
 			&cli.IntFlag{
 				Name:      "width",
-				Aliases:   []string{"w"},
+				Aliases:   []string{"W"},
 				Required:  true,
 				Usage:     "width of the generated maze",
 				Validator: validateGT0,
 			},
 			&cli.IntFlag{
 				Name:      "height",
-				Aliases:   []string{"h"},
+				Aliases:   []string{"H"},
 				Required:  true,
 				Usage:     "height of the generated maze",
 				Validator: validateGT0,

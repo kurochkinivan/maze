@@ -14,6 +14,10 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/terminal"
 )
 
+const (
+	version = "1.0.0"
+)
+
 func main() {
 	mazeService := application.NewMazeService()
 
@@ -32,6 +36,7 @@ func main() {
 			handler.GenerateCommand(),
 			handler.SolveCommand(),
 		},
+		Version: version,
 	}
 
 	if err := app.Run(context.Background(), os.Args); err != nil {

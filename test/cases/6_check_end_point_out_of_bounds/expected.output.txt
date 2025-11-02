@@ -1,0 +1,2 @@
+ending point (100, 100) is out of bounds
+exit status 1

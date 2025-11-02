@@ -58,12 +58,19 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 	end := cmd.IntSlice("end")
 	output := cmd.String("output")
 
-	startPoint := entities.NewPoint(start[0], start[1])
-	endPoint := entities.NewPoint(end[0], end[1])
+	startPoint := entities.NewPoint(start[1], start[0])
+	endPoint := entities.NewPoint(end[1], end[0])
 
 	m, err := h.ReadMaze(file)
 	if err != nil {
 		return fmt.Errorf("failed to read maze: %w", err)
+	}
+
+	if !m.IsValid(startPoint) {
+		return fmt.Errorf("starting point (%d, %d) is out of bounds", startPoint.Col(), startPoint.Row())
+	}
+	if !m.IsValid(endPoint) {
+		return fmt.Errorf("ending point (%d, %d) is out of bounds", endPoint.Col(), endPoint.Row())
 	}
 
 	startCell := m.Cell(startPoint.Row(), startPoint.Col())

@@ -39,7 +39,8 @@ func (m *Maze) ReachableNeighbors(cell *entities.Cell) []*entities.Cell {
 			continue
 		}
 
-		neighbor := entities.NewPoint(cell.Row()+dir.DRow, cell.Col()+dir.DCol)
+		newRow, newCol := cell.Row()+dir.DRow, cell.Col()+dir.DCol
+		neighbor := entities.NewPoint(newRow, newCol)
 		if !m.IsValid(neighbor) {
 			continue
 		}
@@ -83,7 +84,8 @@ func (m *Maze) neighbors(cell *entities.Cell) []*Neighbor {
 	neighbors := make([]*Neighbor, 0, numberOfWalls)
 
 	for _, dir := range allDirections {
-		neighbor := entities.NewPoint(cell.Row()+dir.DRow, cell.Col()+dir.DCol)
+		newRow, newCol := cell.Row()+dir.DRow, cell.Col()+dir.DCol
+		neighbor := entities.NewPoint(newRow, newCol)
 		if !m.IsValid(neighbor) {
 			continue
 		}

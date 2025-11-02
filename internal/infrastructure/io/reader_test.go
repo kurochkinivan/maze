@@ -64,6 +64,7 @@ func TestReadMaze_OneCellMaze(t *testing.T) {
 	assert.True(t, cell.Left)
 	assert.True(t, cell.Right)
 }
+
 func TestReadMaze_Errors(t *testing.T) {
 	tests := []struct {
 		name  string
@@ -103,6 +104,66 @@ func TestReadMaze_Errors(t *testing.T) {
 ##
 ##
 ##
+`,
+		},
+		{
+			name: "missing wall in bottom",
+			input: `
+#####
+# # #
+# # #
+#   #
+## ##
+`,
+		},
+		{
+			name: "missing wall in right wall",
+			input: `
+#####
+# # #
+# #  
+#   #
+#####
+`,
+		},
+		{
+			name: "missing wall in left wall",
+			input: `
+#####
+# # #
+# # #
+    #
+#####
+`,
+		},
+		{
+			name: "missing wall in top wall",
+			input: `
+## ##
+# # #
+# # #
+#   #
+#####
+`,
+		},
+		{
+			name: "different length of rows",
+			input: `
+###
+# # #
+# # #
+#   #
+###
+`,
+		},
+		{
+			name: "passages on even positions",
+			input: `
+#####
+#   #
+## ##
+#   #
+#####
 `,
 		},
 	}

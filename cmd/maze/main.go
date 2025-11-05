@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/urfave/cli/v3"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/application"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator/dfs"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator/prim"
@@ -25,19 +24,9 @@ func main() {
 	mazeService.RegisterSolver("dijkstra", dijkstra.New())
 	mazeService.RegisterSolver("astar", astar.New())
 
-	handler := terminal.New(mazeService)
+	handler := terminal.New(mazeService, version)
 
-	app := &cli.Command{
-		Name:  "maze",
-		Usage: "Generate and solve mazes",
-		Commands: []*cli.Command{
-			handler.GenerateCommand(),
-			handler.SolveCommand(),
-		},
-		Version: version,
-	}
-
-	if err := app.Run(context.Background(), os.Args); err != nil {
+	if err := handler.Run(context.Background(), os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}

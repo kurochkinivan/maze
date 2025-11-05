@@ -15,6 +15,7 @@ import (
 // Handler is a CLI handler that uses a MazeService to generate and solve mazes.
 type Handler struct {
 	mazeService MazeService
+	version     string
 }
 
 // MazeService defines the methods the Handler depends on to generate
@@ -25,9 +26,10 @@ type MazeService interface {
 }
 
 // New creates a new Handler with the provided MazeService.
-func New(mazeService MazeService) *Handler {
+func New(mazeService MazeService, version string) *Handler {
 	return &Handler{
 		mazeService: mazeService,
+		version:     version,
 	}
 }
 
@@ -43,7 +45,7 @@ func (h *Handler) handleGenerate(_ context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("failed to generate maze: %w", err)
 	}
 
-	if err = h.WriteMaze(output, m); err != nil {
+	if err = h.writeMaze(output, m); err != nil {
 		return fmt.Errorf("failed to write maze: %w", err)
 	}
 
@@ -61,7 +63,7 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 	startPoint := entities.NewPoint(start[1], start[0])
 	endPoint := entities.NewPoint(end[1], end[0])
 
-	m, err := h.ReadMaze(file)
+	m, err := h.readMaze(file)
 	if err != nil {
 		return fmt.Errorf("failed to read maze: %w", err)
 	}
@@ -81,7 +83,7 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("failed to solve maze: %w", err)
 	}
 
-	if err = h.WriteMazeWithSolution(output, m, startCell, endCell, path); err != nil {
+	if err = h.writeMazeWithSolution(output, m, startCell, endCell, path); err != nil {
 		return fmt.Errorf("failed to write solution: %w", err)
 	}
 
@@ -90,7 +92,7 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 
 // ReadMaze reads a maze from the provided filename or from stdin if filename is empty.
 // It checks the file existence, opens it and delegates parsing to the mazeio package.
-func (h *Handler) ReadMaze(filename string) (*maze.Maze, error) {
+func (h *Handler) readMaze(filename string) (*maze.Maze, error) {
 	var reader io.Reader
 
 	switch filename {
@@ -115,7 +117,7 @@ func (h *Handler) ReadMaze(filename string) (*maze.Maze, error) {
 
 // WriteMaze writes the provided maze to the given filename or to stdout if filename is empty.
 // It creates/truncates the file when a filename is provided and delegates formatting to mazeio.
-func (h *Handler) WriteMaze(filename string, m *maze.Maze) error {
+func (h *Handler) writeMaze(filename string, m *maze.Maze) error {
 	var writer io.Writer
 
 	switch filename {
@@ -136,7 +138,7 @@ func (h *Handler) WriteMaze(filename string, m *maze.Maze) error {
 
 // WriteMazeWithSolution writes the maze with the solution path to the given filename
 // or stdout if filename is empty. It delegates the actual rendering to mazeio.
-func (h *Handler) WriteMazeWithSolution(
+func (h *Handler) writeMazeWithSolution(
 	filename string,
 	m *maze.Maze,
 	start, end *entities.Cell,

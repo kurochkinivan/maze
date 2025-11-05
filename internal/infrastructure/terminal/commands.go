@@ -1,14 +1,31 @@
 package terminal
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
 	"github.com/urfave/cli/v3"
 )
 
-// GenerateCommand returns a configured *cli.Command for the "generate" subcommand.
-func (h *Handler) GenerateCommand() *cli.Command {
+func (h *Handler) Run(ctx context.Context, osArgs []string) error {
+	return h.app().Run(ctx, osArgs)
+}
+
+func (h *Handler) app() *cli.Command {
+	return &cli.Command{
+		Name:  "maze",
+		Usage: "Generate and solve mazes",
+		Commands: []*cli.Command{
+			h.generateCommand(),
+			h.solveCommand(),
+		},
+		Version: h.version,
+	}
+}
+
+// generateCommand returns a configured *cli.Command for the "generate" subcommand.
+func (h *Handler) generateCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "generate",
 		Usage: "Generate a maze using specified algorithm",
@@ -51,8 +68,8 @@ func (h *Handler) GenerateCommand() *cli.Command {
 	}
 }
 
-// SolveCommand returns a configured *cli.Command for the "solve" subcommand.
-func (h *Handler) SolveCommand() *cli.Command {
+// solveCommand returns a configured *cli.Command for the "solve" subcommand.
+func (h *Handler) solveCommand() *cli.Command {
 	return &cli.Command{
 		Name:  "solve",
 		Usage: "Solve a maze using specified algorithm",

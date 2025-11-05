@@ -1,6 +1,7 @@
 COVERAGE_FILE ?= coverage.out
 
 TARGET ?= maze
+VERSION ?= v1.0.0
 
 MAZE_WIDTH ?= 10
 MAZE_HEIGHT ?= 10
@@ -12,7 +13,7 @@ END_Y = $(shell expr $(MAZE_HEIGHT) - 1)
 build:
 	@echo "Building '${TARGET}' binary..."
 	@mkdir -p ./bin
-	@go build -o ./bin/${TARGET} ./cmd/${TARGET}
+	@go build -ldflags="-X 'main.version=${VERSION}'" -o ./bin/${TARGET} ./cmd/${TARGET}
 	@echo "✓ Binary built successfully: './bin/${TARGET}'"
 
 ## test: Run all tests with race detector and coverage report
@@ -41,21 +42,21 @@ clean:
 
 ## generate: Generate a maze and save it to './output/maze.txt'
 .PHONY: generate
-generate:
+generate: build
 	@echo "Generating ${MAZE_WIDTH}x${MAZE_HEIGHT} maze using DFS algorithm..."
 	@mkdir -p ./output
-	@go run ./cmd/${TARGET} generate \
+	@./bin/${TARGET} generate \
 		--algorithm=dfs \
 		--width=${MAZE_WIDTH} \
 		--height=${MAZE_HEIGHT} \
 		--output=./output/maze.txt
 	@echo "✓ Maze generated and saved to './output/maze.txt'"
 
-## solve: Solve a maze from './output/maze.txt' and save the solution to './output/maze_solution.txt'
+## solve: Solve a maze from './output/maze.txt'
 .PHONY: solve
-solve:
+solve: build
 	@echo "Solving maze from './output/maze.txt' using A* algorithm..."
-	@go run ./cmd/${TARGET} solve \
+	@./bin/${TARGET} solve \
 		--algorithm=astar \
 		--file=./output/maze.txt \
 		--start=0,0 \
@@ -63,28 +64,31 @@ solve:
 		--output=./output/maze_solution.txt
 	@echo "✓ Solution saved to './output/maze_solution.txt'"
 
-## generate-and-solve: Generate a maze and immediately solve it (outputs solution to stdout)
+## generate-and-solve: Generate a maze and immediately solve it
 .PHONY: generate-and-solve
-generate-and-solve:
+generate-and-solve: build
 	@echo "Generating and solving ${MAZE_WIDTH}x${MAZE_HEIGHT} maze..."
-	@echo ""
-	@go run ./cmd/${TARGET} generate \
+	@mkdir -p ./output
+	@./bin/${TARGET} generate \
 		--algorithm=dfs \
 		--width=${MAZE_WIDTH} \
 		--height=${MAZE_HEIGHT} \
-	| go run ./cmd/${TARGET} solve \
+		--output=./output/maze.txt
+	@./bin/${TARGET} solve \
 		--algorithm=astar \
+		--file=./output/maze.txt \
 		--start=0,0 \
-		--end=$(END_X),$(END_Y)
+		--end=$(END_X),$(END_Y) \
+		--output=./output/maze_solution.txt
+	@echo "✓ Maze generated and solved. Files in './output/'"
 
 ## demo: Run a complete demonstration (generate, display, solve, display solution)
 .PHONY: demo
-demo:
+demo: build
 	@echo "=== Maze Generation Demo ==="
-	@echo ""
 	@mkdir -p ./output
 	@echo "Step 1: Generating maze..."
-	@go run ./cmd/${TARGET} generate \
+	@./bin/${TARGET} generate \
 		--algorithm=dfs \
 		--width=${MAZE_WIDTH} \
 		--height=${MAZE_HEIGHT} \
@@ -94,7 +98,7 @@ demo:
 	@cat ./output/maze.txt
 	@echo ""
 	@echo "Step 2: Solving maze..."
-	@go run ./cmd/${TARGET} solve \
+	@./bin/${TARGET} solve \
 		--algorithm=astar \
 		--file=./output/maze.txt \
 		--start=0,0 \

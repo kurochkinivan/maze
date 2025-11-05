@@ -14,9 +14,7 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/terminal"
 )
 
-const (
-	version = "1.0.0"
-)
+var version string
 
 func main() {
 	mazeService := application.NewMazeService()

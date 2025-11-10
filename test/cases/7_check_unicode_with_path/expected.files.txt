@@ -1,0 +1,9 @@
+tests/tmp/7_check_unicode_with_path.txt
+┌─┬───┐
+│O│...│
+│.│.╷.│
+│.│X│.│
+│.└─┘.│
+│.....│
+└─────┘
+===EOF===

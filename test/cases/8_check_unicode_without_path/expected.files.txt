@@ -1,0 +1,5 @@
+tests/tmp/8_check_unicode_without_path.txt
+┌─┐
+│ │
+└─┘
+===EOF===

@@ -1,5 +1,6 @@
 go run ../cmd/maze generate \
+	-u \
     -a dfs \
     -H 1 \
     -W 1 \
-    -o ./tests/tmp/3_check_maze_generation.txt
+    -o ./tests/tmp/8_check_unicode_without_path.txt

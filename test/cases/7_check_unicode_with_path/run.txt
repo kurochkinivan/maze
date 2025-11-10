@@ -1,0 +1,7 @@
+go run ../cmd/maze solve \
+	--unicode \
+	--algorithm=astar \
+	--file=cases/7_check_unicode_with_path/maze.txt \
+	--start=0,0 \
+	--end=1,1 \
+	--output=tests/tmp/7_check_unicode_with_path.txt

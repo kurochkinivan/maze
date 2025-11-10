@@ -9,7 +9,8 @@ import (
 	"github.com/urfave/cli/v3"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
-	mazeio "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/io"
+	maze_reader "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/io/reader"
+	maze_writer "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/io/writer"
 )
 
 // Handler is a CLI handler that uses a MazeService to generate and solve mazes.
@@ -39,13 +40,14 @@ func (h *Handler) handleGenerate(_ context.Context, cmd *cli.Command) error {
 	width := cmd.Int("width")
 	height := cmd.Int("height")
 	output := cmd.String("output")
+	unicode := cmd.Bool("unicode")
 
 	m, err := h.mazeService.GenerateMaze(algorithm, width, height)
 	if err != nil {
 		return fmt.Errorf("failed to generate maze: %w", err)
 	}
 
-	if err = h.writeMaze(output, m); err != nil {
+	if err = h.writeMaze(output, m, unicode); err != nil {
 		return fmt.Errorf("failed to write maze: %w", err)
 	}
 
@@ -59,6 +61,7 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 	start := cmd.IntSlice("start")
 	end := cmd.IntSlice("end")
 	output := cmd.String("output")
+	unicode := cmd.Bool("unicode")
 
 	startPoint := entities.NewPoint(start[1], start[0])
 	endPoint := entities.NewPoint(end[1], end[0])
@@ -83,7 +86,7 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("failed to solve maze: %w", err)
 	}
 
-	if err = h.writeMazeWithSolution(output, m, startCell, endCell, path); err != nil {
+	if err = h.writeMazeWithSolution(output, m, path, unicode); err != nil {
 		return fmt.Errorf("failed to write solution: %w", err)
 	}
 
@@ -112,12 +115,12 @@ func (h *Handler) readMaze(filename string) (*maze.Maze, error) {
 		reader = f
 	}
 
-	return mazeio.ReadMaze(reader)
+	return maze_reader.ReadMaze(reader)
 }
 
 // WriteMaze writes the provided maze to the given filename or to stdout if filename is empty.
 // It creates/truncates the file when a filename is provided and delegates formatting to mazeio.
-func (h *Handler) writeMaze(filename string, m *maze.Maze) error {
+func (h *Handler) writeMaze(filename string, m *maze.Maze, unicode bool) error {
 	var writer io.Writer
 
 	switch filename {
@@ -133,7 +136,7 @@ func (h *Handler) writeMaze(filename string, m *maze.Maze) error {
 		writer = f
 	}
 
-	return mazeio.WriteMaze(writer, m)
+	return maze_writer.WriteMaze(writer, m, unicode)
 }
 
 // WriteMazeWithSolution writes the maze with the solution path to the given filename
@@ -141,8 +144,8 @@ func (h *Handler) writeMaze(filename string, m *maze.Maze) error {
 func (h *Handler) writeMazeWithSolution(
 	filename string,
 	m *maze.Maze,
-	start, end *entities.Cell,
 	path *entities.Path,
+	unicode bool,
 ) error {
 	var writer io.Writer
 
@@ -159,5 +162,5 @@ func (h *Handler) writeMazeWithSolution(
 		writer = f
 	}
 
-	return mazeio.WriteMazeWithSolution(writer, m, start, end, path)
+	return maze_writer.WriteMazeWithSolution(writer, m, path, unicode)
 }

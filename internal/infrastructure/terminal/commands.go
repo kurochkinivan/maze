@@ -63,6 +63,13 @@ func (h *Handler) generateCommand() *cli.Command {
 				Required: false,
 				Usage:    "output file path. If not specified, maze will be printed to console",
 			},
+			&cli.BoolFlag{
+				Name:     "unicode",
+				Aliases:  []string{"u"},
+				Value:    false,
+				Required: false,
+				Usage:    "Render the maze using Unicode symbols instead of ASCII characters",
+			},
 		},
 		Action: h.handleGenerate,
 	}
@@ -112,6 +119,13 @@ func (h *Handler) solveCommand() *cli.Command {
 				Aliases:  []string{"o"},
 				Required: false,
 				Usage:    "output file path for the solution. If not specified, solution will be printed to console",
+			},
+			&cli.BoolFlag{
+				Name:     "unicode",
+				Aliases:  []string{"u"},
+				Value:    false,
+				Required: false,
+				Usage:    "Render the maze using Unicode symbols instead of ASCII characters",
 			},
 		},
 		Action: h.handlerSolve,

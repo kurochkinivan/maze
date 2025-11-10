@@ -1,4 +1,4 @@
-package io
+package maze_reader
 
 import (
 	"strings"

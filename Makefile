@@ -109,3 +109,20 @@ demo: build
 	@cat ./output/maze_solution.txt
 	@echo ""
 	@echo "✓ Demo complete! Files saved in './output/'"
+
+## generate-unicode: Run maze generation in Unicode mode and display result
+.PHONY: generate-unicode
+generate-unicode: build
+	@echo "Generating ${MAZE_WIDTH}x${MAZE_HEIGHT} maze in Unicode mode..."
+	@mkdir -p ./output
+	@./bin/${TARGET} generate \
+		--algorithm=dfs \
+		--width=${MAZE_WIDTH} \
+		--height=${MAZE_HEIGHT} \
+		--output=./output/maze_unicode.txt \
+		--unicode
+	@echo ""
+	@echo "Generated Unicode maze:"
+	@cat ./output/maze_unicode.txt
+	@echo ""
+	@echo "✓ Unicode maze test complete! File saved in './output/maze_unicode.txt'"

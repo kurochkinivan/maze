@@ -2,10 +2,7 @@ package maze_writer
 
 import "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
 
-// renderGridASCII generates a visual 2D byte representation of a maze.
-// Walls are represented by '#' and open paths by spaces (' ').
-// The function scales the maze dimensions by a factor of 2 + 1 to
-// accommodate walls and passages between cells.
+// renderGridASCII creates an ASCII representation of the maze using '#' for walls and ' ' for paths.
 func renderGridASCII(m *maze.Maze) [][]rune {
 	height := m.Rows()*2 + 1
 	width := m.Cols()*2 + 1

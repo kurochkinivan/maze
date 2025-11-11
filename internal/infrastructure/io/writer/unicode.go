@@ -18,6 +18,7 @@ var (
 	smallWallRight    rune = '╶'
 )
 
+// renderGridUnicode converts the ASCII maze grid into a Unicode version with styled wall characters.
 func renderGridUnicode(gridASCII [][]rune) [][]rune {
 	rows, cols := len(gridASCII), len(gridASCII[0])
 
@@ -46,6 +47,7 @@ func renderGridUnicode(gridASCII [][]rune) [][]rune {
 	return gridUnicode
 }
 
+// cellUnicode selects the appropriate Unicode wall character based on neighboring walls.
 func cellUnicode(hasLeft, hasRight, hasTop, hasBottom bool) rune {
 	switch {
 	// cross
@@ -93,10 +95,12 @@ func cellUnicode(hasLeft, hasRight, hasTop, hasBottom bool) rune {
 	}
 }
 
+// isWall checks if the given cell in the grid is a wall.
 func isWall(gridASCII [][]rune, row, col int) bool {
 	return isValid(gridASCII, row, col) && gridASCII[row][col] == '#'
 }
 
+// isValid checks if the given coordinates are within the grid bounds.
 func isValid(gridASCII [][]rune, row, col int) bool {
 	rows, cols := len(gridASCII), len(gridASCII[0])
 	return 0 <= row && row < rows && 0 <= col && col < cols

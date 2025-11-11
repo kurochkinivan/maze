@@ -9,7 +9,7 @@ import (
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
 )
 
-// WriteMaze renders maze to io.Writer.
+// WriteMaze writes the maze to an io.Writer in either ASCII or Unicode format.
 func WriteMaze(w io.Writer, m *maze.Maze, unicode bool) error {
 	gridASCII := renderGridASCII(m)
 
@@ -23,7 +23,7 @@ func WriteMaze(w io.Writer, m *maze.Maze, unicode bool) error {
 	return writeGrid(w, grid)
 }
 
-// WriteMazeWithSolution writes maze with the solution to io.Writer.
+// WriteMazeWithSolution writes the maze with the solution path to an io.Writer.
 func WriteMazeWithSolution(w io.Writer, m *maze.Maze, path *entities.Path, unicode bool) error {
 	gridASCII := renderGridASCII(m)
 
@@ -39,9 +39,7 @@ func WriteMazeWithSolution(w io.Writer, m *maze.Maze, path *entities.Path, unico
 	return writeGrid(w, grid)
 }
 
-// addPath overlays a path on top of a maze grid.
-// The path is represented by '.' characters connecting cells from the start to the end.
-// The start cell is marked with 'O', the end cell is marked with 'X'.
+// addPath overlays the solution path onto the maze grid using '.'; marks start 'O' and end 'X'.
 func addPath(grid [][]rune, path *entities.Path) {
 	start := path.Cells[0]
 	end := path.Cells[len(path.Cells)-1]

@@ -126,3 +126,17 @@ generate-unicode: build
 	@cat ./output/maze_unicode.txt
 	@echo ""
 	@echo "✓ Unicode maze test complete! File saved in './output/maze_unicode.txt'"
+
+## solve-unicode: Solve a maze in Unicode mode and save the solution
+.PHONY: solve-unicode
+solve-unicode: build
+solve-unicode: generate
+	@echo "Solving maze from './output/maze.txt' in Unicode mode..."
+	@mkdir -p ./output
+	@./bin/${TARGET} solve \
+		--algorithm=astar \
+		--unicode \
+		--file=./output/maze.txt \
+		--start=0,0 \
+		--end=$(END_X),$(END_Y) \
+	@echo "✓ Unicode solution saved to './output/maze_solution_unicode.txt'"

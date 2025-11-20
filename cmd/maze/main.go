@@ -5,11 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/application"
-	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator/dfs"
-	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator/prim"
-	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver/astar"
-	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver/dijkstra"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator/generator_provider"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver/solver_provider"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/terminal"
 )
 
@@ -18,15 +15,10 @@ var (
 )
 
 func main() {
-	mazeService := application.NewMazeService()
+	genProvider := generator_provider.New()
+	solverProvider := solver_provider.New()
 
-	mazeService.RegisterGenerator("dfs", dfs.New())
-	mazeService.RegisterGenerator("prim", prim.New())
-
-	mazeService.RegisterSolver("dijkstra", dijkstra.New())
-	mazeService.RegisterSolver("astar", astar.New())
-
-	handler := terminal.New(mazeService, version)
+	handler := terminal.New(genProvider, solverProvider, version)
 
 	if err := handler.Run(context.Background(), os.Args); err != nil {
 		fmt.Fprintln(os.Stderr, err.Error())

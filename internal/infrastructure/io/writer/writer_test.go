@@ -128,7 +128,7 @@ func TestWriteMazeWithSolutionASCII(t *testing.T) {
 	tests := []struct {
 		name        string
 		m           *maze.Maze
-		path        *entities.Path
+		path        entities.Path
 		wantASCII   string
 		wantUnicode string
 	}{
@@ -197,7 +197,7 @@ func TestWriteMazeWithSolutionASCII(t *testing.T) {
 	}
 }
 
-func create3x3Maze() (*maze.Maze, *entities.Path) {
+func create3x3Maze() (*maze.Maze, entities.Path) {
 	/*
 		[a]   [b] - [c]
 		 |	   |	 |
@@ -217,21 +217,21 @@ func create3x3Maze() (*maze.Maze, *entities.Path) {
 	h := m.Cell(2, 1)
 	i := m.Cell(2, 2)
 
-	maze.DirectionDown.RemoveWall(a, d)
-	maze.DirectionDown.RemoveWall(d, g)
-	maze.DirectionRight.RemoveWall(g, h)
-	maze.DirectionRight.RemoveWall(h, i)
-	maze.DirectionUp.RemoveWall(i, f)
-	maze.DirectionUp.RemoveWall(f, c)
-	maze.DirectionLeft.RemoveWall(c, b)
-	maze.DirectionDown.RemoveWall(b, e)
+	path := []*entities.Cell{a, d, g, h, i, f, c, b, e}
 
-	return m, &entities.Path{
-		Cells: []*entities.Cell{a, d, g, h, i, f, c, b, e},
-	}
+	entities.DirectionDown.RemoveWall(a, d)
+	entities.DirectionDown.RemoveWall(d, g)
+	entities.DirectionRight.RemoveWall(g, h)
+	entities.DirectionRight.RemoveWall(h, i)
+	entities.DirectionUp.RemoveWall(i, f)
+	entities.DirectionUp.RemoveWall(f, c)
+	entities.DirectionLeft.RemoveWall(c, b)
+	entities.DirectionDown.RemoveWall(b, e)
+
+	return m, entities.NewPath(path)
 }
 
-func create2x2Maze() (*maze.Maze, *entities.Path) {
+func create2x2Maze() (*maze.Maze, entities.Path) {
 	/*
 		[a]   [b]
 		 |	   |
@@ -244,11 +244,11 @@ func create2x2Maze() (*maze.Maze, *entities.Path) {
 	c := m.Cell(1, 0)
 	d := m.Cell(1, 1)
 
-	maze.DirectionDown.RemoveWall(a, c)
-	maze.DirectionRight.RemoveWall(c, d)
-	maze.DirectionUp.RemoveWall(d, b)
+	path := []*entities.Cell{a, c, d, b}
 
-	return m, &entities.Path{
-		Cells: []*entities.Cell{a, c, d, b},
-	}
+	entities.DirectionDown.RemoveWall(a, c)
+	entities.DirectionRight.RemoveWall(c, d)
+	entities.DirectionUp.RemoveWall(d, b)
+
+	return m, entities.NewPath(path)
 }

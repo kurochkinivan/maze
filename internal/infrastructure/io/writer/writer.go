@@ -24,7 +24,7 @@ func WriteMaze(w io.Writer, m *maze.Maze, unicode bool) error {
 }
 
 // WriteMazeWithSolution writes the maze with the solution path to an io.Writer.
-func WriteMazeWithSolution(w io.Writer, m *maze.Maze, path *entities.Path, unicode bool) error {
+func WriteMazeWithSolution(w io.Writer, m *maze.Maze, path entities.Path, unicode bool) error {
 	gridASCII := renderGridASCII(m)
 
 	var grid [][]rune
@@ -40,13 +40,13 @@ func WriteMazeWithSolution(w io.Writer, m *maze.Maze, path *entities.Path, unico
 }
 
 // addPath overlays the solution path onto the maze grid using '.'; marks start 'O' and end 'X'.
-func addPath(grid [][]rune, path *entities.Path) {
-	start := path.Cells[0]
-	end := path.Cells[len(path.Cells)-1]
+func addPath(grid [][]rune, path entities.Path) {
+	start := path[0]
+	end := path[len(path)-1]
 
-	for i := 1; i < len(path.Cells); i++ {
-		prev := path.Cells[i-1]
-		curr := path.Cells[i]
+	for i := 1; i < len(path); i++ {
+		prev := path[i-1]
+		curr := path[i]
 
 		prevRow, prevCol := gridCoord(prev.Row()), gridCoord(prev.Col())
 		curRow, curCol := gridCoord(curr.Row()), gridCoord(curr.Col())

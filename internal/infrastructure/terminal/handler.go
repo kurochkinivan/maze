@@ -8,29 +8,36 @@ import (
 
 	"github.com/urfave/cli/v3"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/generator"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver"
 	maze_reader "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/io/reader"
 	maze_writer "gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/infrastructure/io/writer"
 )
 
-// Handler is a CLI handler that uses a MazeService to generate and solve mazes.
 type Handler struct {
-	mazeService MazeService
-	version     string
+	generatorProvider GeneratorProvider
+	solverProvider    SolverProvider
+	version           string
 }
 
-// MazeService defines the methods the Handler depends on to generate
-// and solve mazes.
-type MazeService interface {
-	GenerateMaze(algorithm string, width, height int) (*maze.Maze, error)
-	SolveMaze(algorithm string, m *maze.Maze, start, end *entities.Cell) (*entities.Path, error)
+type GeneratorProvider interface {
+	Algorithm(algorithm generator.Algorithm) (generator.Generator, error)
 }
 
-// New creates a new Handler with the provided MazeService.
-func New(mazeService MazeService, version string) *Handler {
+type SolverProvider interface {
+	Algorithm(algorithm solver.Algorithm) (solver.Solver, error)
+}
+
+func New(
+	generatorProvider GeneratorProvider,
+	solverProvider SolverProvider,
+	version string,
+) *Handler {
 	return &Handler{
-		mazeService: mazeService,
-		version:     version,
+		generatorProvider: generatorProvider,
+		solverProvider:    solverProvider,
+		version:           version,
 	}
 }
 
@@ -42,10 +49,14 @@ func (h *Handler) handleGenerate(_ context.Context, cmd *cli.Command) error {
 	output := cmd.String("output")
 	unicode := cmd.Bool("unicode")
 
-	m, err := h.mazeService.GenerateMaze(algorithm, width, height)
+	algo := generator.Algorithm(algorithm)
+	generator, err := h.generatorProvider.Algorithm(algo)
 	if err != nil {
-		return fmt.Errorf("failed to generate maze: %w", err)
+		return fmt.Errorf("failed to get algorithm: %w", err)
 	}
+
+	m := maze.New(width, height)
+	generator.Generate(m)
 
 	if err = h.writeMaze(output, m, unicode); err != nil {
 		return fmt.Errorf("failed to write maze: %w", err)
@@ -63,26 +74,24 @@ func (h *Handler) handlerSolve(_ context.Context, cmd *cli.Command) error {
 	output := cmd.String("output")
 	unicode := cmd.Bool("unicode")
 
-	startPoint := entities.NewPoint(start[1], start[0])
-	endPoint := entities.NewPoint(end[1], end[0])
-
 	m, err := h.readMaze(file)
 	if err != nil {
 		return fmt.Errorf("failed to read maze: %w", err)
 	}
 
-	if !m.IsValid(startPoint) {
-		return fmt.Errorf("starting point (%d, %d) is out of bounds", startPoint.Col(), startPoint.Row())
-	}
-	if !m.IsValid(endPoint) {
-		return fmt.Errorf("ending point (%d, %d) is out of bounds", endPoint.Col(), endPoint.Row())
-	}
-
-	startCell := m.Cell(startPoint.Row(), startPoint.Col())
-	endCell := m.Cell(endPoint.Row(), endPoint.Col())
-
-	path, err := h.mazeService.SolveMaze(algorithm, m, startCell, endCell)
+	startCell, endCell, err := processPoints(m, start, end)
 	if err != nil {
+		return fmt.Errorf("failed to process start and end points: %w", err)
+	}
+
+	algo := solver.Algorithm(algorithm)
+	solver, err := h.solverProvider.Algorithm(algo)
+	if err != nil {
+		return fmt.Errorf("failed to get algorithm: %w", err)
+	}
+
+	path, ok := solver.Solve(m, startCell, endCell)
+	if !ok {
 		return fmt.Errorf("failed to solve maze: %w", err)
 	}
 
@@ -144,7 +153,7 @@ func (h *Handler) writeMaze(filename string, m *maze.Maze, unicode bool) error {
 func (h *Handler) writeMazeWithSolution(
 	filename string,
 	m *maze.Maze,
-	path *entities.Path,
+	path entities.Path,
 	unicode bool,
 ) error {
 	var writer io.Writer
@@ -163,4 +172,21 @@ func (h *Handler) writeMazeWithSolution(
 	}
 
 	return maze_writer.WriteMazeWithSolution(writer, m, path, unicode)
+}
+
+func processPoints(m *maze.Maze, start, end []int) (*entities.Cell, *entities.Cell, error) {
+	startPoint := entities.NewPoint(start[1], start[0])
+	endPoint := entities.NewPoint(end[1], end[0])
+
+	if !m.IsValid(startPoint) {
+		return nil, nil, fmt.Errorf("starting point (%d, %d) is out of bounds", startPoint.Col(), startPoint.Row())
+	}
+	if !m.IsValid(endPoint) {
+		return nil, nil, fmt.Errorf("ending point (%d, %d) is out of bounds", endPoint.Col(), endPoint.Row())
+	}
+
+	startCell := m.Cell(startPoint.Row(), startPoint.Col())
+	endCell := m.Cell(endPoint.Row(), endPoint.Col())
+
+	return startCell, endCell, nil
 }

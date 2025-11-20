@@ -2,7 +2,6 @@ package maze_reader
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 
@@ -58,7 +57,7 @@ func parseMaze(lines []string) (*maze.Maze, error) {
 // odd number of rows and columns, and fully enclosed outer walls.
 func validateMaze(lines []string) error {
 	if len(lines) < 3 || len(lines[0]) < 3 {
-		return errors.New("invalid maze: must contain at least 3 lines and cols")
+		return fmt.Errorf("invalid maze: must contain at least 3 lines and cols")
 	}
 
 	// check all rows are of equal length
@@ -70,7 +69,7 @@ func validateMaze(lines []string) error {
 	}
 
 	if len(lines)%2 != 1 || expectedLen%2 != 1 {
-		return errors.New("number of lines and cols must be odd")
+		return fmt.Errorf("number of lines and cols must be odd")
 	}
 
 	// check that all cells on the left and right are walls

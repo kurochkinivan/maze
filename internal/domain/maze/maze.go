@@ -34,7 +34,7 @@ func New(width int, height int) *Maze {
 func (m *Maze) ReachableNeighbors(cell *entities.Cell) []*entities.Cell {
 	neighbors := make([]*entities.Cell, 0, numberOfWalls)
 
-	for _, dir := range allDirections {
+	for _, dir := range entities.AllDirections {
 		if dir.HasWall(cell) {
 			continue
 		}
@@ -52,23 +52,23 @@ func (m *Maze) ReachableNeighbors(cell *entities.Cell) []*entities.Cell {
 }
 
 // UnvisitedNeighbors returns neighbors of a cell that have not been visited.
-func (m *Maze) UnvisitedNeighbors(cell *entities.Cell, visited map[*entities.Cell]bool) []*Neighbor {
+func (m *Maze) UnvisitedNeighbors(cell *entities.Cell, visited map[*entities.Cell]bool) []*entities.Neighbor {
 	return m.filteredNeighbors(cell, func(c *entities.Cell) bool {
 		return !visited[c]
 	})
 }
 
 // VisitedNeighbors returns neighbors of a cell that have already been visited.
-func (m *Maze) VisitedNeighbors(cell *entities.Cell, visited map[*entities.Cell]bool) []*Neighbor {
+func (m *Maze) VisitedNeighbors(cell *entities.Cell, visited map[*entities.Cell]bool) []*entities.Neighbor {
 	return m.filteredNeighbors(cell, func(c *entities.Cell) bool {
 		return visited[c]
 	})
 }
 
 // filteredNeighbors returns all neighboring cells that match a given filter condition.
-func (m *Maze) filteredNeighbors(cell *entities.Cell, filter func(c *entities.Cell) bool) []*Neighbor {
+func (m *Maze) filteredNeighbors(cell *entities.Cell, filter func(c *entities.Cell) bool) []*entities.Neighbor {
 	neighbors := m.neighbors(cell)
-	filtered := make([]*Neighbor, 0, len(neighbors))
+	filtered := make([]*entities.Neighbor, 0, len(neighbors))
 
 	for _, n := range neighbors {
 		if filter(n.Cell) {
@@ -78,19 +78,19 @@ func (m *Maze) filteredNeighbors(cell *entities.Cell, filter func(c *entities.Ce
 	return filtered
 }
 
-// neighbors returns all valid neighboring cells (i.e. cells that are in bounds of the maze) 
+// neighbors returns all valid neighboring cells (i.e. cells that are in bounds of the maze)
 // of the given cell, regardless of walls.
-func (m *Maze) neighbors(cell *entities.Cell) []*Neighbor {
-	neighbors := make([]*Neighbor, 0, numberOfWalls)
+func (m *Maze) neighbors(cell *entities.Cell) []*entities.Neighbor {
+	neighbors := make([]*entities.Neighbor, 0, numberOfWalls)
 
-	for _, dir := range allDirections {
+	for _, dir := range entities.AllDirections {
 		newRow, newCol := cell.Row()+dir.DRow, cell.Col()+dir.DCol
 		neighbor := entities.NewPoint(newRow, newCol)
 		if !m.IsValid(neighbor) {
 			continue
 		}
 
-		neighbors = append(neighbors, &Neighbor{
+		neighbors = append(neighbors, &entities.Neighbor{
 			Cell:      m.Cell(neighbor.Row(), neighbor.Col()),
 			Direction: dir,
 		})

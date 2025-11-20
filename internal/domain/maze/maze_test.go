@@ -15,8 +15,8 @@ func TestReachableNeighbors_HappyPath(t *testing.T) {
 	rightCell := maze.Cell(1, 2)
 	leftCell := maze.Cell(1, 0)
 
-	DirectionRight.RemoveWall(centralCell, rightCell)
-	DirectionLeft.RemoveWall(centralCell, leftCell)
+	entities.DirectionRight.RemoveWall(centralCell, rightCell)
+	entities.DirectionLeft.RemoveWall(centralCell, leftCell)
 
 	reachable := maze.ReachableNeighbors(centralCell)
 
@@ -40,33 +40,33 @@ func TestNeighbours(t *testing.T) {
 	tests := []struct {
 		name string
 		cell *entities.Cell
-		want map[*entities.Cell]Direction
+		want map[*entities.Cell]entities.Direction
 	}{
 		{
 			name: "central cell",
 			cell: maze.Cell(1, 1),
-			want: map[*entities.Cell]Direction{
-				maze.Cell(0, 1): DirectionUp,
-				maze.Cell(1, 0): DirectionLeft,
-				maze.Cell(1, 2): DirectionRight,
-				maze.Cell(2, 1): DirectionDown,
+			want: map[*entities.Cell]entities.Direction{
+				maze.Cell(0, 1): entities.DirectionUp,
+				maze.Cell(1, 0): entities.DirectionLeft,
+				maze.Cell(1, 2): entities.DirectionRight,
+				maze.Cell(2, 1): entities.DirectionDown,
 			},
 		},
 		{
 			name: "border cell",
 			cell: maze.Cell(0, 0),
-			want: map[*entities.Cell]Direction{
-				maze.Cell(0, 1): DirectionRight,
-				maze.Cell(1, 0): DirectionDown,
+			want: map[*entities.Cell]entities.Direction{
+				maze.Cell(0, 1): entities.DirectionRight,
+				maze.Cell(1, 0): entities.DirectionDown,
 			},
 		},
 		{
 			name: "central top cell",
 			cell: maze.Cell(0, 1),
-			want: map[*entities.Cell]Direction{
-				maze.Cell(0, 2): DirectionRight,
-				maze.Cell(0, 0): DirectionLeft,
-				maze.Cell(1, 1): DirectionDown,
+			want: map[*entities.Cell]entities.Direction{
+				maze.Cell(0, 2): entities.DirectionRight,
+				maze.Cell(0, 0): entities.DirectionLeft,
+				maze.Cell(1, 1): entities.DirectionDown,
 			},
 		},
 	}

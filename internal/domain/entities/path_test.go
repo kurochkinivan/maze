@@ -1,98 +1,53 @@
-package entities
+package entities_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 )
 
-func TestBuildPath(t *testing.T) {
-	c1 := &Cell{}
-	c2 := &Cell{}
-	c3 := &Cell{}
-
-	tests := []struct {
-		name     string
-		previous map[*Cell]*Cell
-		end      *Cell
-		want     []*Cell
-	}{
-		{
-			name: "build path success",
-			previous: map[*Cell]*Cell{
-				c3: c2,
-				c2: c1,
-				c1: nil,
-			},
-			end:  c3,
-			want: []*Cell{c1, c2, c3},
-		},
-		{
-			name: "two elements path",
-			previous: map[*Cell]*Cell{
-				c2: c1,
-				c1: nil,
-			},
-			end:  c2,
-			want: []*Cell{c1, c2},
-		},
-		{
-			name:     "single cell",
-			previous: map[*Cell]*Cell{},
-			end:      c1,
-			want:     []*Cell{c1},
-		},
-		{
-			name: "nil end",
-			previous: map[*Cell]*Cell{
-				c2: c1,
-			},
-			end:  nil,
-			want: []*Cell{},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			path := BuildPath(tt.previous, tt.end)
-			assert.Equal(t, tt.want, path.Cells)
-		})
-	}
+func TestNewPath_Empty(t *testing.T) {
+	path := entities.NewPath([]*entities.Cell{})
+	require.Len(t, path, 0)
 }
 
-func TestReversePath(t *testing.T) {
-	c1 := &Cell{}
-	c2 := &Cell{}
-	c3 := &Cell{}
+func TestNewPath_SingleCell(t *testing.T) {
+	cell := entities.NewCell(2, 3)
+	path := entities.NewPath([]*entities.Cell{cell})
 
-	tests := []struct {
-		name  string
-		input []*Cell
-		want  []*Cell
-	}{
-		{
-			name:  "reverse odd number of elements",
-			input: []*Cell{c1, c2, c3},
-			want:  []*Cell{c3, c2, c1},
-		},
-		{
-			name:  "reverse even number of elements",
-			input: []*Cell{c1, c3},
-			want:  []*Cell{c3, c1},
-		},
-		{
-			name:  "empty input",
-			input: []*Cell{},
-			want:  []*Cell{},
-		},
-	}
+	require.Len(t, path, 1)
+	assert.Equal(t, 2, path[0].Row())
+	assert.Equal(t, 3, path[0].Col())
+}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := &Path{Cells: tt.input}
-			p.ReversePath()
+func TestNewPath_MultipleCells(t *testing.T) {
+	c1 := entities.NewCell(0, 0)
+	c2 := entities.NewCell(1, 1)
+	c3 := entities.NewCell(2, 2)
 
-			assert.Equal(t, tt.want, p.Cells)
-		})
-	}
+	path := entities.NewPath([]*entities.Cell{c1, c2, c3})
+	require.Len(t, path, 3)
+
+	assert.Equal(t, 0, path[0].Row())
+	assert.Equal(t, 0, path[0].Col())
+
+	assert.Equal(t, 1, path[1].Row())
+	assert.Equal(t, 1, path[1].Col())
+
+	assert.Equal(t, 2, path[2].Row())
+	assert.Equal(t, 2, path[2].Col())
+}
+
+func TestNewPath_NoMutationOnCellChange(t *testing.T) {
+	cell := entities.NewCell(5, 6)
+	path := entities.NewPath([]*entities.Cell{cell})
+
+	// mutate original cell
+	cell.Point = entities.NewPoint(9, 9)
+
+	// path must remain unchanged
+	assert.Equal(t, 5, path[0].Row())
+	assert.Equal(t, 6, path[0].Col())
 }

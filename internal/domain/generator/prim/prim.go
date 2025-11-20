@@ -9,13 +9,13 @@ import (
 
 // Generator creates mazes using the Prim algorithm.
 type Generator struct {
-	generator.BaseGenerator
+	generator.RandomGenerator
 }
 
 // New creates a new Prim-based maze generator with optional settings.
-func New(opts ...generator.Option) *Generator {
+func New() *Generator {
 	return &Generator{
-		BaseGenerator: generator.NewBaseGenerator(opts...),
+		RandomGenerator: generator.NewRandomGenerator(),
 	}
 }
 

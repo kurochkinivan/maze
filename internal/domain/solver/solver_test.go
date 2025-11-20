@@ -6,17 +6,14 @@ import (
 	"github.com/stretchr/testify/suite"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver/astar"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver/dijkstra"
 )
 
 type SolverTestSuite struct {
 	suite.Suite
-	Solver
-}
-
-type Solver interface {
-	Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path, bool)
+	solver.Solver
 }
 
 func TestSolverTestSuiteAstar(t *testing.T) {
@@ -40,8 +37,8 @@ func (suite *SolverTestSuite) TestSolve_SameCell() {
 
 	suite.True(ok, "should find path to same cell")
 	suite.NotNil(path)
-	suite.Len(path.Cells, 1, "path to same cell should have length 1")
-	suite.Equal(cell, path.Cells[0])
+	suite.Len(path, 1, "path to same cell should have length 1")
+	suite.Equal(cell.Point, path[0])
 }
 
 // TestSolve_DirectPath checks direct path (no walls).
@@ -57,17 +54,17 @@ func (suite *SolverTestSuite) TestSolve_DirectPath() {
 	cellC := m.Cell(0, 2)
 
 	// Remove walls between cells
-	maze.DirectionRight.RemoveWall(cellA, cellB)
-	maze.DirectionRight.RemoveWall(cellB, cellC)
+	entities.DirectionRight.RemoveWall(cellA, cellB)
+	entities.DirectionRight.RemoveWall(cellB, cellC)
 
 	path, ok := suite.Solver.Solve(m, cellA, cellC)
 
 	suite.True(ok, "should find direct path")
 	suite.NotNil(path)
-	suite.Len(path.Cells, 3, "path should be A->B->C")
-	suite.Equal(cellA, path.Cells[0])
-	suite.Equal(cellB, path.Cells[1])
-	suite.Equal(cellC, path.Cells[2])
+	suite.Len(path, 3, "path should be A->B->C")
+	suite.Equal(cellA.Point, path[0])
+	suite.Equal(cellB.Point, path[1])
+	suite.Equal(cellC.Point, path[2])
 }
 
 // TestSolve_NoPath checks case where no path can be found.
@@ -111,19 +108,19 @@ func (suite *SolverTestSuite) TestSolve_OptimalPath() {
 	cellE := m.Cell(1, 1)
 	cellF := m.Cell(1, 2)
 
-	maze.DirectionRight.RemoveWall(cellA, cellB)
-	maze.DirectionRight.RemoveWall(cellB, cellC)
-	maze.DirectionRight.RemoveWall(cellD, cellE)
-	maze.DirectionRight.RemoveWall(cellE, cellF)
+	entities.DirectionRight.RemoveWall(cellA, cellB)
+	entities.DirectionRight.RemoveWall(cellB, cellC)
+	entities.DirectionRight.RemoveWall(cellD, cellE)
+	entities.DirectionRight.RemoveWall(cellE, cellF)
 
-	maze.DirectionDown.RemoveWall(cellA, cellD)
-	maze.DirectionDown.RemoveWall(cellC, cellF)
+	entities.DirectionDown.RemoveWall(cellA, cellD)
+	entities.DirectionDown.RemoveWall(cellC, cellF)
 
 	path, ok := suite.Solver.Solve(m, cellA, cellE)
 
 	suite.True(ok, "should find path")
 	suite.NotNil(path)
-	suite.Len(path.Cells, 3, "optimal path should have length 3")
-	suite.Equal(cellA, path.Cells[0], "path should start at A")
-	suite.Equal(cellE, path.Cells[len(path.Cells)-1], "path should end at E")
+	suite.Len(path, 3, "optimal path should have length 3")
+	suite.Equal(cellA.Point, path[0], "path should start at A")
+	suite.Equal(cellE.Point, path[len(path)-1], "path should end at E")
 }

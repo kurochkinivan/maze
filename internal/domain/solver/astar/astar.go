@@ -5,6 +5,7 @@ import (
 
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/entities"
 	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/maze"
+	"gitlab.education.tbank.ru/backend-academy-go-2025/homeworks/hw2-labyrinths/internal/domain/solver"
 )
 
 // Solver finds the shortest path in a maze using the A* algorithm.
@@ -17,7 +18,7 @@ func New() *Solver {
 
 // Solve finds a path from start to end cells in the maze.
 // Returns the path and true if a path exists, otherwise nil and false.
-func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path, bool) {
+func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (entities.Path, bool) {
 	reachable := make(map[*entities.Cell]struct{})
 	visited := make(map[*entities.Cell]bool)
 
@@ -32,7 +33,7 @@ func (s *Solver) Solve(m *maze.Maze, start, end *entities.Cell) (*entities.Path,
 		current := s.chooseNode(end, costs, reachable)
 
 		if current == end {
-			return entities.BuildPath(previous, end), true
+			return solver.BuildPath(previous, end), true
 		}
 
 		delete(reachable, current)
